@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notatnik</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #notes-list {
+            display: flex;
+            flex-wrap: wrap; 
+            gap: 20px; 
+        }
+        .note-item {
+            position: relative; 
+            display: inline-flex; 
+            flex-direction: column; 
+            font-size: 18px;
+            border: 1px solid #ddd;
+            padding: 30px 10px 10px 30px; 
+            background-color: #f9f9f9;
+            max-width: 100%; 
+            box-sizing: border-box; /* Uwzględnia padding i border w szerokości elementu */
+        }
+        .note-item-number {
+            position: absolute;
+            top: 5px;
+            left: 5px; 
+            background-color: #ddd;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box; /* Uwzględnia padding w szerokości */
+        }
+        input[type="submit"] {
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Notes</h1>
+    <div id="notes-list"></div>
+    <form id="note-form">
+        <br>
+        <input type="text" id="note-input" placeholder="Wpisz coś...">
+        <input type="submit" value="Submit">
+    </form>
+
+    <script src="main.js"></script>
+</body>
+</html>
