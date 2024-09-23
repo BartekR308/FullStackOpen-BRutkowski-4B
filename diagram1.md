@@ -35,10 +35,8 @@
 
     browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
     activate server
-    server-->>browser:User wrote text and hit the save button
+    server-->>browser:The server, upon receiving the file, saves the new_note file on the server and add it to browser
     deactivate server
-
-    Note right of browser: The server, upon receiving the file, saves the new_note file on the server
     
 
 ```
