@@ -1,7 +1,7 @@
 let noteCount = 0;
 
 document.getElementById('note-form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Zapobiega domyślnej akcji formularza
+    event.preventDefault(); 
 
     var noteInput = document.getElementById('note-input').value;
 
