@@ -1,17 +1,36 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 
+const Notification = ({ message }) => {
+  if (!message) {
+    return null
+  }
+
+  return (
+    <div className='notification'>
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
-  const [persons, setPersons] = useState([
-    { id: 1, name: 'Arto Hellas', number: '040-123456' }
-  ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notification, setNotification] = useState(null)
 
-  // Obsługa dodawania nowej osoby
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+      })
+  }, [])
+
   const addPerson = (event) => {
     event.preventDefault()
     const duplicate = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
@@ -21,23 +40,41 @@ const App = () => {
       return
     }
 
+
     const newPerson = {
-      id: persons.length + 1,
+      id: (persons.length + 1).toString(),
       name: newName,
       number: newNumber,
     }
 
-    setPersons(persons.concat(newPerson))
-    setNewName('')
-    setNewNumber('')
+
+    
+    axios.post('http://localhost:3001/persons', newPerson)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNumber('')
+        setNotification(`Added ${newPerson.name}`)
+        setTimeout(() => setNotification(null), 5000)
+      })
+  }
+
+  const deletePerson = (id) => {
+    const personToDelete = persons.find(person => person.id === id)
+    if (window.confirm(`Delete ${personToDelete.name}?`)) {
+      axios.delete(`http://localhost:3001/persons/${id}`)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+    }
   }
 
   return (
     <div>
-      <h2>Książka telefoniczna</h2>
+      <h2>Phonebook</h2>
+      <Notification message={notification} />
       <Filter filter={filter} handleFilterChange={(e) => setFilter(e.target.value)} />
-
-      <h3>Dodaj nowy kontakt</h3>
+      <h3>add a new</h3>
       <PersonForm
         addPerson={addPerson}
         newName={newName}
@@ -45,9 +82,8 @@ const App = () => {
         newNumber={newNumber}
         handleNumberChange={(e) => setNewNumber(e.target.value)}
       />
-
-      <h3>Numery</h3>
-      <Persons persons={persons} filter={filter} />
+      <h3>Numbers</h3>
+      <Persons persons={persons} filter={filter} deletePerson={deletePerson} />
     </div>
   )
 }
